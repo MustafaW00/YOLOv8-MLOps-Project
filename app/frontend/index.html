@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><title>YOLOv8 Detector</title></head>
+<body>
+  <h1>YOLOv8 Object Detection</h1>
+  <input type="file" id="imageInput" accept="image/*">
+  <button id="detectBtn">Detect</button>
+  <br><br>
+  <canvas id="canvas"></canvas>
+  <pre id="results"></pre>
+
+  <script>
+    const API_URL = "http://localhost:5000";
+
+    document.getElementById("detectBtn").onclick = async () => {
+      const file = document.getElementById("imageInput").files[0];
+      if (!file) return alert("Pick an image first");
+
+      const form = new FormData();
+      form.append("image", file);
+      const res = await fetch(`${API_URL}/predict`, { method: "POST", body: form });
+      const data = await res.json();
+
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        ctx.lineWidth = 3;
+        ctx.font = "18px sans-serif";
+
+        data.detections.forEach(d => {
+          const [x1, y1, x2, y2] = d.box;
+          ctx.strokeStyle = "lime";
+          ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+          ctx.fillStyle = "lime";
+          ctx.fillText(`${d.label} ${d.confidence}`, x1, y1 - 5);
+        });
+      };
+      img.src = URL.createObjectURL(file);
+
+      document.getElementById("results").textContent = JSON.stringify(data, null, 2);
+    };
+  </script>
+</body>
+</html>
