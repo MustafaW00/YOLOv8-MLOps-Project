@@ -1,0 +1,6 @@
+venv
+bus.jpg
+testmodel.py
+Dockerfile
+__pycache__
+.DS_Store
