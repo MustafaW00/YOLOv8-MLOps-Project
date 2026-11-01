@@ -21,7 +21,7 @@ def predict():
     for box in results[0].boxes:
         label = model.names[int(box.cls)]
         confidence = float(box.conf)
-    detections.append({"label": label, "confidence": round(confidence, 2),"box":box.xyxy[0].tolist()})
+        detections.append({"label": label, "confidence": round(confidence, 2),"box":box.xyxy[0].tolist()})
     return jsonify(detections=detections)
 
 if __name__ == "__main__":
