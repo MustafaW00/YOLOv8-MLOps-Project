@@ -9,3 +9,16 @@ module "vpc" {
 
   private_subnet = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
+
+
+module "eks" {
+  source = "./modules/eks"
+
+  node_group_name = "node-group"
+
+  kubernetes_version = "1.35"
+
+  cluster_name = "mlops-cluster"
+
+  private_subnet_ids = module.vpc.private_subnet_ids
+}
