@@ -1,24 +1,92 @@
 module "vpc" {
   source = "../modules/vpc"
 
-  vpc_cidr = "10.0.0.0/16"
-
-  azs = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-
-  public_subnet = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-
+  vpc_cidr       = "10.0.0.0/16"
+  azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  public_subnet  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   private_subnet = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
-
 
 module "eks" {
   source = "../modules/eks"
 
-  node_group_name = "node-group"
-
+  node_group_name    = "node-group"
   kubernetes_version = "1.35"
-
-  cluster_name = "mlops-cluster"
-
+  cluster_name       = "mlops-cluster"
   private_subnet_ids = module.vpc.private_subnet_ids
+}
+
+data "aws_route53_zone" "main" {
+  name = "mustafawarsame.com"
+}
+
+module "external_dns_irsa" {
+  source = "../modules/irsa"
+
+  role_name         = "mlops-external-dns"
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_issuer       = module.eks.oidc_issuer
+  namespace         = "external-dns"
+  service_account   = "external-dns"
+
+
+  policy_json = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ChangeResourceRecordSets"]
+        Resource = [data.aws_route53_zone.main.arn]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResources"
+        ]
+        Resource = ["*"]
+      }
+    ]
+  })
+}
+
+
+
+module "cert_manager_irsa" {
+  source = "../modules/irsa"
+
+  role_name         = "mlops-cert-manager"
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_issuer       = module.eks.oidc_issuer
+  namespace         = "cert-manager"
+  service_account   = "cert-manager"
+
+
+  policy_json = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ChangeResourceRecordSets"]
+        Resource = [data.aws_route53_zone.main.arn]
+
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResources"
+        ]
+        Resource = ["*"]
+      },
+      { Effect = "Allow"
+        Action = [
+          "route53:GetChange"
+        ]
+        Resource = ["arn:aws:route53:::change/*"]
+      }
+    ]
+  })
 }
