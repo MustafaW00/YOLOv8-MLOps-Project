@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../modules/vpc"
 
   vpc_cidr = "10.0.0.0/16"
 
@@ -12,7 +12,7 @@ module "vpc" {
 
 
 module "eks" {
-  source = "./modules/eks"
+  source = "../modules/eks"
 
   node_group_name = "node-group"
 
@@ -21,18 +21,4 @@ module "eks" {
   cluster_name = "mlops-cluster"
 
   private_subnet_ids = module.vpc.private_subnet_ids
-}
-
-module "ecr" {
-  source    = "./modules/ecr"
-  ecr_repos = ["yolov8n-frontend", "yolov8n-backend"]
-}
-
-import {
-  to = module.ecr.aws_ecr_repository.this["yolov8n-frontend"]
-  id = "yolov8n-frontend"
-}
-import {
-  to = module.ecr.aws_ecr_repository.this["yolov8n-backend"]
-  id = "yolov8n-backend"
 }
