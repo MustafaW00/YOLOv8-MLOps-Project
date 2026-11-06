@@ -15,3 +15,24 @@ resource "helm_release" "traefik" {
   })]
 }
 
+resource "helm_release" "cert_manager" {
+  name             = "cert-manager"
+  repository       = "oci://quay.io/jetstack/charts"
+  chart            = "cert-manager"
+  namespace        = "cert-manager"
+  create_namespace = true
+  version          = "v1.21.3"
+
+
+  values = [yamlencode({
+    serviceAccount = {
+      annotations = {
+        "eks.amazonaws.com/role-arn" = module.cert_manager_irsa.role_arn
+      }
+    }
+  })]
+  set = [{
+    name  = "crds.enabled"
+    value = "true"
+  }]
+}
