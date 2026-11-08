@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolov8n-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolov8n-backend
+  template:
+    metadata:
+      labels:
+        app: yolov8n-backend
+    spec:
+      containers:
+        - name: yolov8n-backend
+          image: 293968602076.dkr.ecr.eu-west-1.amazonaws.com/yolov8n-backend:8dbd8e4
+          ports:
+            - containerPort: 5000

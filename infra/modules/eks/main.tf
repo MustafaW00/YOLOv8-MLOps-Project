@@ -120,3 +120,9 @@ resource "aws_eks_addon" "identity-agent" {
   cluster_name = aws_eks_cluster.main.name
   addon_name   = "eks-pod-identity-agent"
 }
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  url            = aws_eks_cluster.main.identity[0].oidc[0].issuer
+  client_id_list = ["sts.amazonaws.com"]
+
+}

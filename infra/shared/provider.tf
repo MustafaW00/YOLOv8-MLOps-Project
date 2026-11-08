@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     bucket       = "terraform-state-bucket-mustafawarsamee"
-    key          = "mlops/yolo/cluster/terraform-state"
+    key          = "mlops/yolo/shared/terraform-state"
     region       = "eu-west-1"
     use_lockfile = true
   }

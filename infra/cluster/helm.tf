@@ -23,7 +23,6 @@ resource "helm_release" "cert_manager" {
   create_namespace = true
   version          = "v1.21.3"
 
-
   values = [yamlencode({
     serviceAccount = {
       annotations = {
@@ -31,8 +30,28 @@ resource "helm_release" "cert_manager" {
       }
     }
   })]
+
   set = [{
     name  = "crds.enabled"
     value = "true"
   }]
+}
+
+resource "helm_release" "external_dns" {
+  name             = "external-dns"
+  repository       = "https://kubernetes-sigs.github.io/external-dns"
+  chart            = "external-dns"
+  namespace        = "external-dns"
+  create_namespace = true
+  version          = "1.21.1"
+
+  values = [yamlencode({
+    serviceAccount = {
+      annotations = {
+        "eks.amazonaws.com/role-arn" = module.external_dns_irsa.role_arn
+      }
+    }
+    txtOwnerId    = module.eks.cluster_name
+    domainFilters = ["mustafawarsame.com"]
+  })]
 }
