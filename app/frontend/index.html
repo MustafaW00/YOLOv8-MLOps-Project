@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head><title>YOLOv8 Detector</title></head>
+
+<head>
+  <title>YOLOv8 Detector</title>
+</head>
+
 <body>
   <h1>YOLOv8 Object Detection</h1>
   <input type="file" id="imageInput" accept="image/*">
@@ -10,7 +14,7 @@
   <pre id="results"></pre>
 
   <script>
-    const API_URL = "http://localhost:2000";
+    const API_URL = "";
 
     document.getElementById("detectBtn").onclick = async () => {
       const file = document.getElementById("imageInput").files[0];
@@ -45,4 +49,5 @@
     };
   </script>
 </body>
+
 </html>
