@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolov8n-backend
+spec:
+  selector:
+    app: yolov8n-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
