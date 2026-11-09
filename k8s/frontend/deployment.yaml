@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolov8n-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolov8n-frontend
+  template:
+    metadata:
+      labels:
+        app: yolov8n-frontend
+    spec:
+      containers:
+        - name: yolov8n-frontend
+          image: 293968602076.dkr.ecr.eu-west-1.amazonaws.com/yolov8n-frontend:fdd48b1
+          ports:
+            - containerPort: 8080
