@@ -12,6 +12,19 @@ resource "helm_release" "traefik" {
         "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb"
       }
     }
+    ports = {
+      web = {
+        http = {
+          redirections = {
+            entryPoint = {
+              to        = "websecure"
+              scheme    = "https"
+              permanent = true
+            }
+          }
+        }
+      }
+    }
   })]
 }
 
@@ -55,3 +68,5 @@ resource "helm_release" "external_dns" {
     domainFilters = ["mustafawarsame.com"]
   })]
 }
+
+
