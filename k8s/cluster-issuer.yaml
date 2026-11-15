@@ -9,7 +9,7 @@ spec:
     privateKeySecretRef:
       name: issuer-secret-key
     solvers:
-    - dns01:
-        route53:
-          region: eu-west-1
-          hostedZoneID: Z02787231F3TO6WOZ8LQN
+      - dns01:
+          route53:
+            region: eu-west-1
+            hostedZoneID: Z02787231F3TO6WOZ8LQN
