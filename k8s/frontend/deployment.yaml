@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: yolov8n-frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: yolov8n-frontend
