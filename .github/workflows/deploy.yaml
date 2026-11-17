@@ -13,7 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: registry
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v6
