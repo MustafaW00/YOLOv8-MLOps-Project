@@ -22,6 +22,11 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::293968602076:role/github-actions-ecr-push
           aws-region: eu-west-1
+          audience: sts.amazonaws.com
 
       - name: Verify identity
         run: aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/configure-aws-credentials@v6.3.0
