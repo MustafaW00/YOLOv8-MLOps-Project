@@ -13,6 +13,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: REGISTRY
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v6
@@ -34,7 +35,7 @@ jobs:
       - name: Build backend image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ env.BACKEND_REPOSITORY }}
+          REPOSITORY: ${{ var.BACKEND_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG app/backend
