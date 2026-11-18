@@ -77,3 +77,18 @@ jobs:
         run: |
           docker push ${{ vars.REGISTRY }}/${{ vars.BACKEND_REPOSITORY }}:${{ github.sha }}
           docker push ${{ vars.REGISTRY }}/${{ vars.FRONTEND_REPOSITORY }}:${{ github.sha }}
+
+      - name: Update image tags in k8s
+        run: |
+          # 1. swap the tag in both deployment files
+          sed -i "s|yolov8n-backend:.*|yolov8n-backend:${{ github.sha }}|" k8s/backend/deployment.yaml
+          sed -i "s|yolov8n-frontend:.*|yolov8n-frontend:${{ github.sha }}|" k8s/frontend/deployment.yaml
+
+          # 2. tell git who's committing
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # 3. commit + push
+          git add k8s/
+          git commit -m "chore: update image tags to ${{ github.sha }}"
+          git push
