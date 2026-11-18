@@ -48,10 +48,19 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG app/frontend
 
-      - name: Scan images
+      - name: Scan Backend images
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ vars.REGISTRY }}/${{ vars.BACKEND_REPOSITORY }}:${{ github.sha }}
+          format: table
+          exit-code: 1
+          severity: CRITICAL
+          ignore-unfixed: true
+
+      - name: Scan Frontend images
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ vars.REGISTRY }}/${{ vars.FRONTEND_REPOSITORY }}:${{ github.sha }}
           format: table
           exit-code: 1
           severity: CRITICAL
