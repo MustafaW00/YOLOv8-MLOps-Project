@@ -36,5 +36,14 @@ jobs:
           REGISTRY: ${{ vars.REGISTRY }}
           REPOSITORY: ${{ vars.BACKEND_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
+
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG app/backend
+
+      - name: Build frontend image
+        env:
+          REGISTRY: ${{ vars.REGISTRY }}
+          REPOSITORY: ${{ vars.FRONTEND_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG app/frontend
