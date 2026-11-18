@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: yolov8n-frontend
-          image: 293968602076.dkr.ecr.eu-west-1.amazonaws.com/yolov8n-frontend:fdd48b1
+          image: 293968602076.dkr.ecr.eu-west-1.amazonaws.com/yolov8n-frontend:a4a6319fc767e5f18d86b2d4d271ff25f2abbebe
           ports:
             - containerPort: 8080
