@@ -62,11 +62,9 @@ jobs:
           severity: CRITICAL
           ignore-unfixed: true
 
-      - name: Login to Amazon ECR
+      - name: Login and Push image to Amazon ECR
         id: login-ecr
         uses: aws-actions/configure-aws-credentials@v6.3.0
-
-      - name: Push images to ECR
         run: |
           docker push ${{ vars.REGISTRY }}/${{ vars.BACKEND_REPOSITORY }}:${{ github.sha }}
           docker push ${{ vars.REGISTRY }}/${{ vars.FRONTEND_REPOSITORY }}:${{ github.sha }}
