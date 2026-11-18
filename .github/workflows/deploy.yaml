@@ -70,10 +70,8 @@ jobs:
           severity: CRITICAL
           ignore-unfixed: true
 
-      - name: Debug docker auth
-        run: |
-          cat ~/.docker/config.json
-          echo "Pushing to: ${{ vars.REGISTRY }}"
+      - name: Docker Login
+        uses: aws-actions/amazon-ecr-login@v2.1.7
 
       - name: Push images to ECR
         run: |
