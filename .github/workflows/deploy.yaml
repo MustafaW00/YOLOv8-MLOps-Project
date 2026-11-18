@@ -27,6 +27,10 @@ jobs:
       - name: Verify identity
         run: aws sts get-caller-identity
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+
       - name: Build backend image
         env:
           REGISTRY: ${{ vars.REGISTRY }}
@@ -62,9 +66,12 @@ jobs:
           severity: CRITICAL
           ignore-unfixed: true
 
-      - name: Login and Push image to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/configure-aws-credentials@v6.3.0
+      - name: Debug docker auth
+        run: |
+          cat ~/.docker/config.json
+          echo "Pushing to: ${{ vars.REGISTRY }}"
+
+      - name: Push images to ECR
         run: |
           docker push ${{ vars.REGISTRY }}/${{ vars.BACKEND_REPOSITORY }}:${{ github.sha }}
           docker push ${{ vars.REGISTRY }}/${{ vars.FRONTEND_REPOSITORY }}:${{ github.sha }}
